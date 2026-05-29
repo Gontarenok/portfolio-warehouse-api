@@ -1,0 +1,32 @@
+# Deploy: GitHub Actions (see .github/workflows/deploy-fly.yml) or locally:
+#   flyctl launch --no-deploy
+#   flyctl postgres create --name portfolio-warehouse-db --region ams
+#   flyctl postgres attach portfolio-warehouse-db -a portfolio-warehouse-api
+#   flyctl secrets set JWT_SECRET=... --app portfolio-warehouse-api
+#   flyctl deploy
+
+app = 'portfolio-warehouse-api'
+primary_region = 'ams'
+
+[build]
+  dockerfile = 'Dockerfile'
+
+[deploy]
+  release_command = 'alembic upgrade head'
+
+[env]
+  JWT_ALGORITHM = 'HS256'
+  JWT_EXPIRE_MINUTES = '60'
+
+[http_service]
+  internal_port = 8000
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+[[vm]]
+  memory = '512mb'
+  cpu_kind = 'shared'
+  cpus = 1
