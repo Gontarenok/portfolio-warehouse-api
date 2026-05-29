@@ -23,3 +23,4 @@ venv
 .pytest_cache
 .portfolio
 *.log
+.github/workflows/
