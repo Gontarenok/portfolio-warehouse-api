@@ -103,6 +103,24 @@ See `.env.example`:
 | `JWT_ALGORITHM` | Default `HS256` |
 | `JWT_EXPIRE_MINUTES` | Token lifetime (default 60) |
 
+## Deploy on Fly.io (via GitHub Actions)
+
+If Render free tier returns **402** (service limit), use Fly.io instead. The repo includes `.github/workflows/deploy-fly.yml`.
+
+1. Create a [Fly.io](https://fly.io) account and install `flyctl`.
+2. Create a free PostgreSQL database (Fly Postgres or [Neon](https://neon.tech)):
+   - **Fly:** `flyctl postgres create --name portfolio-warehouse-db --region ams`
+   - **Neon:** copy the connection string from the dashboard.
+3. In GitHub repo **Settings → Secrets and variables → Actions**, add:
+   - `FLY_API_TOKEN` — from [Fly access tokens](https://fly.io/user/personal_access_tokens)
+   - `JWT_SECRET` — any long random string
+   - `DATABASE_URL` — PostgreSQL URL (required if not using `flyctl postgres attach`)
+4. Push to `main` or run the workflow manually (**Actions → Deploy to Fly.io → Run workflow**).
+
+Live URL after deploy: **https://portfolio-warehouse-api.fly.dev** (Swagger: `/docs`).
+
+For local deploy with `flyctl deploy`, see `fly.toml`.
+
 ## License
 
 MIT
